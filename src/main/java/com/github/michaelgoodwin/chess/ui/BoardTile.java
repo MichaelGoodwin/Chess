@@ -22,36 +22,10 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.github.michaelgoodwin.chess;
+package com.github.michaelgoodwin.chess.ui;
 
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.Logger;
-import joptsimple.OptionParser;
-import joptsimple.OptionSet;
-import lombok.extern.slf4j.Slf4j;
-import org.slf4j.LoggerFactory;
+import javax.swing.JPanel;
 
-@Slf4j
-public class Chess
+public class BoardTile extends JPanel
 {
-	static final String GAME_NAME = "Chess Bored";
-
-	public static void main(final String[] args) throws Exception
-	{
-		final OptionParser parser = new OptionParser();
-		parser.accepts("debug", "Show extra debugging output");
-
-		final OptionSet options = parser.parse(args);
-
-		if (options.has("debug"))
-		{
-			final Logger logger = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
-			logger.setLevel(Level.DEBUG);
-		}
-
-		final ChessUI chessUI = new ChessUI();
-
-		chessUI.init();
-		chessUI.show();
-	}
 }

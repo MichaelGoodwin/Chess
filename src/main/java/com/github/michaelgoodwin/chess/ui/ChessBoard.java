@@ -22,36 +22,44 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.github.michaelgoodwin.chess;
+package com.github.michaelgoodwin.chess.ui;
 
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.Logger;
-import joptsimple.OptionParser;
-import joptsimple.OptionSet;
-import lombok.extern.slf4j.Slf4j;
-import org.slf4j.LoggerFactory;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import javax.swing.JPanel;
 
-@Slf4j
-public class Chess
+public class ChessBoard extends JPanel
 {
-	static final String GAME_NAME = "Chess Bored";
+	private static final Color LIGHT_TILE = new Color(181, 136, 99);
+	private static final Color DARK_TILE = new Color(240, 217, 181);
+	private static final Dimension MINIMUM_BOARD_SIZE = new Dimension(300, 300);
 
-	public static void main(final String[] args) throws Exception
+	public ChessBoard()
 	{
-		final OptionParser parser = new OptionParser();
-		parser.accepts("debug", "Show extra debugging output");
+		super();
 
-		final OptionSet options = parser.parse(args);
-
-		if (options.has("debug"))
+		setLayout(new GridLayout(8, 8));
+		boolean darkFlag = false;
+		for (int i = 0; i < 64; i++)
 		{
-			final Logger logger = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
-			logger.setLevel(Level.DEBUG);
+			// We need to repeat the last color on the next rows first tile to get a checkered pattern
+			if (i % 8 == 0)
+			{
+				darkFlag = !darkFlag;
+			}
+
+			final BoardTile tile = new BoardTile();
+			tile.setBackground(darkFlag ? DARK_TILE : LIGHT_TILE);
+			add(tile);
+
+			darkFlag = !darkFlag;
 		}
 
-		final ChessUI chessUI = new ChessUI();
+		setMinimumSize(MINIMUM_BOARD_SIZE);
+		setPreferredSize(MINIMUM_BOARD_SIZE);
 
-		chessUI.init();
-		chessUI.show();
+		revalidate();
+		repaint();
 	}
 }

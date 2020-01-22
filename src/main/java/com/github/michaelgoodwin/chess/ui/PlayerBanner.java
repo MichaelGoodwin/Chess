@@ -22,36 +22,57 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.github.michaelgoodwin.chess;
+package com.github.michaelgoodwin.chess.ui;
 
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.Logger;
-import joptsimple.OptionParser;
-import joptsimple.OptionSet;
-import lombok.extern.slf4j.Slf4j;
-import org.slf4j.LoggerFactory;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.border.MatteBorder;
 
-@Slf4j
-public class Chess
+/**
+ * Shows information about a player of a game
+ */
+public class PlayerBanner extends JPanel
 {
-	static final String GAME_NAME = "Chess Bored";
+	private static final Color DARK_GRAY_COLOR = new Color(40, 40, 40);
+	private static final Dimension ICON_SIZE = new Dimension(32, 32);
 
-	public static void main(final String[] args) throws Exception
+	public PlayerBanner()
 	{
-		final OptionParser parser = new OptionParser();
-		parser.accepts("debug", "Show extra debugging output");
+		super();
 
-		final OptionSet options = parser.parse(args);
+		setLayout(new GridBagLayout());
+		final GridBagConstraints c = new GridBagConstraints();
+		c.anchor = GridBagConstraints.WEST;
+		c.gridx = 0;
+		c.gridy = 0;
+		c.weighty = 1;
+		c.ipadx = 2;
 
-		if (options.has("debug"))
-		{
-			final Logger logger = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
-			logger.setLevel(Level.DEBUG);
-		}
+		final JLabel iconLabel = new JLabel();
+		iconLabel.setBorder(new MatteBorder(1, 1, 1, 1, DARK_GRAY_COLOR));
+		iconLabel.setPreferredSize(ICON_SIZE);
+		iconLabel.setMinimumSize(ICON_SIZE);
+		iconLabel.setOpaque(false);
 
-		final ChessUI chessUI = new ChessUI();
+		add(iconLabel, c);
+		c.gridx++;
 
-		chessUI.init();
-		chessUI.show();
+		final JLabel nameLabel = new JLabel("Michael Goodwin");
+		add(nameLabel, c);
+		c.gridx++;
+
+		final JLabel rankLabel = new JLabel("950");
+		add(rankLabel, c);
+		c.gridx++;
+
+		c.anchor = GridBagConstraints.EAST;
+		c.weightx = 1;
+		final JLabel timer = new JLabel("3:45");
+		timer.setBackground(DARK_GRAY_COLOR);
+		add(timer, c);
 	}
 }

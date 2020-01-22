@@ -22,36 +22,36 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.github.michaelgoodwin.chess;
+package com.github.michaelgoodwin.chess.ui;
 
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.Logger;
-import joptsimple.OptionParser;
-import joptsimple.OptionSet;
-import lombok.extern.slf4j.Slf4j;
-import org.slf4j.LoggerFactory;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
-@Slf4j
-public class Chess
+public class ChessGame extends JPanel
 {
-	static final String GAME_NAME = "Chess Bored";
-
-	public static void main(final String[] args) throws Exception
+	public ChessGame()
 	{
-		final OptionParser parser = new OptionParser();
-		parser.accepts("debug", "Show extra debugging output");
+		super();
 
-		final OptionSet options = parser.parse(args);
+		setLayout(new GridBagLayout());
+		final GridBagConstraints c = new GridBagConstraints();
+		c.anchor = GridBagConstraints.WEST;
+		c.gridx = 0;
+		c.gridy = 0;
+		c.fill = GridBagConstraints.BOTH;
 
-		if (options.has("debug"))
-		{
-			final Logger logger = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
-			logger.setLevel(Level.DEBUG);
-		}
+		add(new PlayerBanner(), c);
+		c.gridy++;
+		add(new ChessBoard(), c);
+		c.gridy++;
+		add(new PlayerBanner(), c);
+		c.gridy++;
 
-		final ChessUI chessUI = new ChessUI();
-
-		chessUI.init();
-		chessUI.show();
+		c.gridheight = c.gridy;
+		c.gridy = 0;
+		c.gridx++;
+		add(new JLabel("Moves and other stuff goes over here btw"), c);
 	}
 }

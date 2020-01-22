@@ -24,34 +24,42 @@
  */
 package com.github.michaelgoodwin.chess;
 
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.Logger;
-import joptsimple.OptionParser;
-import joptsimple.OptionSet;
-import lombok.extern.slf4j.Slf4j;
-import org.slf4j.LoggerFactory;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 
-@Slf4j
-public class Chess
+public class ImageUtil
 {
-	static final String GAME_NAME = "Chess Bored";
-
-	public static void main(final String[] args) throws Exception
+	static
 	{
-		final OptionParser parser = new OptionParser();
-		parser.accepts("debug", "Show extra debugging output");
+		ImageIO.setUseCache(false);
+	}
 
-		final OptionSet options = parser.parse(args);
-
-		if (options.has("debug"))
+	/**
+	 * Reads an image resource from a given path relative to a given class.
+	 * This method is primarily shorthand for the synchronization and error handling required for
+	 * loading image resources from classes.
+	 *
+	 * @param c    The class to be referenced for resource path.
+	 * @param path The path, relative to the given class.
+	 * @return     A {@link BufferedImage} of the loaded image resource from the given path.
+	 */
+	public static BufferedImage getResourceStreamFromClass(final Class c, final String path)
+	{
+		try
 		{
-			final Logger logger = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
-			logger.setLevel(Level.DEBUG);
+			synchronized (ImageIO.class)
+			{
+				return ImageIO.read(c.getResourceAsStream(path));
+			}
 		}
-
-		final ChessUI chessUI = new ChessUI();
-
-		chessUI.init();
-		chessUI.show();
+		catch (IllegalArgumentException e)
+		{
+			throw new IllegalArgumentException(path, e);
+		}
+		catch (IOException e)
+		{
+			throw new RuntimeException(path, e);
+		}
 	}
 }

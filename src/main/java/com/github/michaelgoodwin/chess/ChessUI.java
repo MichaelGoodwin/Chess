@@ -24,34 +24,47 @@
  */
 package com.github.michaelgoodwin.chess;
 
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.Logger;
-import joptsimple.OptionParser;
-import joptsimple.OptionSet;
-import lombok.extern.slf4j.Slf4j;
-import org.slf4j.LoggerFactory;
+import com.github.michaelgoodwin.chess.ui.ChessGame;
+import java.awt.image.BufferedImage;
+import javax.swing.BoxLayout;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
-@Slf4j
-public class Chess
+class ChessUI
 {
-	static final String GAME_NAME = "Chess Bored";
+	private static final BufferedImage ICON = ImageUtil.getResourceStreamFromClass(ChessUI.class, "icon.png");
 
-	public static void main(final String[] args) throws Exception
+	private JFrame frame = new JFrame();
+	private JPanel container = new JPanel();
+
+	void init() throws Exception
 	{
-		final OptionParser parser = new OptionParser();
-		parser.accepts("debug", "Show extra debugging output");
-
-		final OptionSet options = parser.parse(args);
-
-		if (options.has("debug"))
+		SwingUtilities.invokeAndWait(() ->
 		{
-			final Logger logger = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
-			logger.setLevel(Level.DEBUG);
-		}
+			frame.setTitle(Chess.GAME_NAME);
+			frame.setIconImage(ICON);
+			frame.setLocationRelativeTo(null); // Center
+			frame.setResizable(true);
 
-		final ChessUI chessUI = new ChessUI();
+			container.setLayout(new BoxLayout(container, BoxLayout.X_AXIS));
+			container.add(new ChessGame());
 
-		chessUI.init();
-		chessUI.show();
+			frame.add(container);
+		});
+	}
+
+	void show()
+	{
+		SwingUtilities.invokeLater(() ->
+		{
+			// Layout frame
+			frame.revalidate();
+			frame.pack();
+			frame.setVisible(true);
+			frame.setMinimumSize(frame.getSize());
+			frame.toFront();
+			frame.requestFocus();
+		});
 	}
 }
