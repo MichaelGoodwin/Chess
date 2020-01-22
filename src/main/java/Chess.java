@@ -23,13 +23,27 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import joptsimple.OptionParser;
+import joptsimple.OptionSet;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.LoggerFactory;
 
 @Slf4j
 public class Chess
 {
-	public static void main(String[] args)
+	public static void main(final String[] args)
 	{
-		log.info("Working");
+		final OptionParser parser = new OptionParser();
+		parser.accepts("debug", "Show extra debugging output");
+
+		final OptionSet options = parser.parse(args);
+
+		if (options.has("debug"))
+		{
+			final Logger logger = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+			logger.setLevel(Level.DEBUG);
+		}
 	}
 }
