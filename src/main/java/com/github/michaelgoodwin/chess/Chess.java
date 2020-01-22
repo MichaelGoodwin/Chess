@@ -22,6 +22,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.github.michaelgoodwin.chess;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
@@ -33,6 +34,8 @@ import org.slf4j.LoggerFactory;
 @Slf4j
 public class Chess
 {
+	static final String GAME_NAME = "Chess Bored";
+
 	public static void main(final String[] args)
 	{
 		final OptionParser parser = new OptionParser();
@@ -45,5 +48,7 @@ public class Chess
 			final Logger logger = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
 			logger.setLevel(Level.DEBUG);
 		}
+
+
 	}
 }
