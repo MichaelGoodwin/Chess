@@ -49,6 +49,7 @@ public class PlayerBanner extends JPanel
 		c.anchor = GridBagConstraints.WEST;
 		c.gridx = 0;
 		c.gridy = 0;
+		c.gridheight = 2;
 		c.weighty = 1;
 		c.ipadx = 2;
 
@@ -60,17 +61,25 @@ public class PlayerBanner extends JPanel
 
 		add(iconLabel, c);
 		c.gridx++;
+		c.gridheight = 1;
 
 		final JLabel nameLabel = new JLabel("Michael Goodwin");
 		add(nameLabel, c);
+		c.gridy++;
+
+		final JLabel capturedPieces = new JLabel("Captured Pieces");
+		add(capturedPieces, c);
+		c.gridy = 0;
 		c.gridx++;
+		c.gridheight = 2;
+		c.anchor = GridBagConstraints.NORTH;
 
 		final JLabel rankLabel = new JLabel("950");
 		add(rankLabel, c);
 		c.gridx++;
-
 		c.anchor = GridBagConstraints.EAST;
 		c.weightx = 1;
+
 		final JLabel timer = new JLabel("3:45");
 		timer.setBackground(DARK_GRAY_COLOR);
 		add(timer, c);
