@@ -24,8 +24,11 @@
  */
 package com.github.michaelgoodwin.chess.pieces;
 
+import com.github.michaelgoodwin.chess.GameBoard;
 import com.github.michaelgoodwin.chess.Team;
 import java.awt.Point;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
@@ -58,8 +61,54 @@ public class King extends Piece
 			return false;
 		}
 
-		// TODO: Check if position is occupied by a piece we can't capture or if we'd be in check by moving here
+		final Piece targetPiece = board[point.x][point.y];
+		if (targetPiece != null)
+		{
+			if (targetPiece.getTeam().equals(getTeam()))
+			{
+				return false;
+			}
+		}
+
+		// TODO: Check if we'd be in check by moving here (or captured piece would be protected)
 		return true;
+	}
+
+	// Similar to Piece::getPossibleMovesFromOffset but can only move 1 tile and can't move into check
+	@Override
+	public Set<Point> getPossibleMoves(Point point, Piece[][] board)
+	{
+		final int[][] offsets = {
+			{0, 1}, // Up
+			{0, -1}, // Down
+			{-1, 0}, // Left
+			{1, 0}, // Right
+
+			{1, 1}, // Up & Right
+			{-1, 1}, // Up & Left
+			{1, -1}, // Down & Right
+			{-1, -1} // Down & Left
+		};
+
+		final Set<Point> points = new HashSet<>();
+		for (int[] o : offsets)
+		{
+			final Point p = new Point(point.x + o[0], point.y + o[1]);
+			if (p.x > GameBoard.SIZE || p.y > GameBoard.SIZE)
+			{
+				// Out of bounds
+				continue;
+			}
+
+			final Piece piece = board[p.x][p.y];
+			if (piece == null || !piece.getTeam().equals(getTeam()))
+			{
+				// TODO: Check if this tile is being attacked by another unit (would put us in check)
+				points.add(p);
+			}
+		}
+
+		return points;
 	}
 
 	@Override

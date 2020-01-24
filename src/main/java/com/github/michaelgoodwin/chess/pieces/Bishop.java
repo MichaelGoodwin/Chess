@@ -26,6 +26,7 @@ package com.github.michaelgoodwin.chess.pieces;
 
 import com.github.michaelgoodwin.chess.Team;
 import java.awt.Point;
+import java.util.Set;
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
@@ -46,13 +47,36 @@ public class Bishop extends Piece
 		}
 
 		// A bishop can only move diagonally
-		if (getLocation().x - point.x != this.getLocation().x - point.y)
+		int xDiff = getLocation().x - point.x;
+		int yDiff = getLocation().y - point.y;
+
+		// Not moving diagonally
+		if (Math.abs(xDiff) != Math.abs(yDiff))
 		{
 			return false;
 		}
 
-		// TODO: Check for collisions/captures
+		// Check if path to target location is clear
+		if (!canReachDestination(point, board))
+		{
+			return false;
+		}
+
+		//TODO: Check for pinned
 		return true;
+	}
+
+	@Override
+	public Set<Point> getPossibleMoves(Point point, Piece[][] board)
+	{
+		final int[][] offsets = {
+			{1, 1}, // Up & Right
+			{-1, 1}, // Up & Left
+			{1, -1}, // Down & Right
+			{-1, -1} // Down & Left
+		};
+
+		return getPossibleMovesFromOffsets(point, board, offsets);
 	}
 
 	@Override

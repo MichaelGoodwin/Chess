@@ -24,8 +24,12 @@
  */
 package com.github.michaelgoodwin.chess.pieces;
 
+import com.github.michaelgoodwin.chess.GameBoard;
 import com.github.michaelgoodwin.chess.Team;
 import java.awt.Point;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
@@ -55,8 +59,43 @@ public class Knight extends Piece
 			return false;
 		}
 
-		// TODO: Check if piece occupies the point and if we can capture it. Check if king would be in check after moving (pinned piece)
+		final Piece piece = board[point.x][point.y];
+		if (piece != null && piece.getTeam().equals(getTeam()))
+		{
+			return false;
+		}
+
+		// TODO: Check if king would be in check after moving (pinned piece)
 		return true;
+	}
+
+	@Override
+	public Set<Point> getPossibleMoves(Point point, Piece[][] board)
+	{
+		return Stream.of(
+			// Possible moves left/right (Horizontal L)
+			new Point(point.x + 2, point.y + 1),
+			new Point(point.x + 2, point.y - 1),
+			new Point(point.x - 2, point.y + 1),
+			new Point(point.x - 2, point.y - 1),
+			// Possible moves up/down (Vertical L)
+			new Point(point.x + 1, point.y + 2),
+			new Point(point.x + 1, point.y - 2),
+			new Point(point.x - 1, point.y + 2),
+			new Point(point.x - 1, point.y - 2)
+		)
+			.filter(p ->
+				{
+					if (p.x >= GameBoard.SIZE || p.y >= GameBoard.SIZE)
+					{
+						return false;
+					}
+
+					final Piece piece = board[p.x][p.y];
+					return piece == null || !piece.getTeam().equals(getTeam());
+				})
+			.collect(Collectors.toSet());
+		// TODO: Check if the king would be in check after moving (Pinned piece)
 	}
 
 	@Override

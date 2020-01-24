@@ -26,6 +26,7 @@ package com.github.michaelgoodwin.chess.pieces;
 
 import com.github.michaelgoodwin.chess.Team;
 import java.awt.Point;
+import java.util.Set;
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
@@ -57,8 +58,32 @@ public class Queen extends Piece
 			return false;
 		}
 
-		// TODO: Check for collision
+		// Check if path to target location is clear
+		if (!canReachDestination(point, board))
+		{
+			return false;
+		}
+
+		// TODO: Check for king pins
 		return true;
+	}
+
+	@Override
+	public Set<Point> getPossibleMoves(Point point, Piece[][] board)
+	{
+		final int[][] offsets = {
+			{0, 1}, // Up
+			{0, -1}, // Down
+			{-1, 0}, // Left
+			{1, 0}, // Right
+
+			{1, 1}, // Up & Right
+			{-1, 1}, // Up & Left
+			{1, -1}, // Down & Right
+			{-1, -1} // Down & Left
+		};
+
+		return getPossibleMovesFromOffsets(point, board, offsets);
 	}
 
 	@Override

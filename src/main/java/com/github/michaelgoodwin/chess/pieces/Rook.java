@@ -26,6 +26,7 @@ package com.github.michaelgoodwin.chess.pieces;
 
 import com.github.michaelgoodwin.chess.Team;
 import java.awt.Point;
+import java.util.Set;
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
@@ -55,8 +56,26 @@ public class Rook extends Piece
 			return false;
 		}
 
-		// TODO: Check for piece collisions
+		if (!canReachDestination(point, board))
+		{
+			return false;
+		}
+
+		// TODO: Check for pinned
 		return true;
+	}
+
+	@Override
+	public Set<Point> getPossibleMoves(Point point, Piece[][] board)
+	{
+		final int[][] offsets = {
+			{0, 1}, // Up
+			{0, -1}, // Down
+			{-1, 0}, // Left
+			{1, 0} // Right
+		};
+
+		return getPossibleMovesFromOffsets(point, board, offsets);
 	}
 
 	@Override
