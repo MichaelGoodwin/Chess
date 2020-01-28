@@ -25,8 +25,10 @@
 package com.github.michaelgoodwin.chess.pieces;
 
 import com.github.michaelgoodwin.chess.GameBoard;
+import com.github.michaelgoodwin.chess.ImageUtil;
 import com.github.michaelgoodwin.chess.Team;
 import java.awt.Point;
+import java.awt.image.BufferedImage;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.EqualsAndHashCode;
@@ -34,12 +36,15 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class King extends Piece
 {
+	private static final BufferedImage WHITE_ICON = ImageUtil.getResourceStreamFromClass(Piece.class, "wk.png");
+	private static final BufferedImage BLACK_ICON = ImageUtil.getResourceStreamFromClass(Piece.class, "bk.png");
+
 	// TODO: track and allow for castling
 	public boolean canCastle = false;
 
 	public King(Team team)
 	{
-		super(team);
+		super(team, WHITE_ICON, BLACK_ICON);
 	}
 
 	@Override

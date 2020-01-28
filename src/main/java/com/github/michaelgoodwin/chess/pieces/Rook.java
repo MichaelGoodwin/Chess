@@ -24,17 +24,22 @@
  */
 package com.github.michaelgoodwin.chess.pieces;
 
+import com.github.michaelgoodwin.chess.ImageUtil;
 import com.github.michaelgoodwin.chess.Team;
 import java.awt.Point;
+import java.awt.image.BufferedImage;
 import java.util.Set;
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 public class Rook extends Piece
 {
+	private static final BufferedImage WHITE_ICON = ImageUtil.getResourceStreamFromClass(Piece.class, "wr.png");
+	private static final BufferedImage BLACK_ICON = ImageUtil.getResourceStreamFromClass(Piece.class, "br.png");
+
 	public Rook(Team team)
 	{
-		super(team);
+		super(team, WHITE_ICON, BLACK_ICON);
 	}
 
 	@Override

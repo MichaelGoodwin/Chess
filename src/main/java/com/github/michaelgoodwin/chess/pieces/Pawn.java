@@ -25,8 +25,10 @@
 package com.github.michaelgoodwin.chess.pieces;
 
 import com.github.michaelgoodwin.chess.GameBoard;
+import com.github.michaelgoodwin.chess.ImageUtil;
 import com.github.michaelgoodwin.chess.Team;
 import java.awt.Point;
+import java.awt.image.BufferedImage;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -36,6 +38,9 @@ import lombok.Setter;
 @EqualsAndHashCode(callSuper = true)
 public class Pawn extends Piece
 {
+	private static final BufferedImage WHITE_ICON = ImageUtil.getResourceStreamFromClass(Piece.class, "wp.png");
+	private static final BufferedImage BLACK_ICON = ImageUtil.getResourceStreamFromClass(Piece.class, "bp.png");
+
 	private static final int[][] WHITE_ATTACK_OFFSETS = {
 		{1, 1}, // Up & Right
 		{-1, 1} // Up & Left
@@ -55,7 +60,7 @@ public class Pawn extends Piece
 
 	public Pawn(Team team)
 	{
-		super(team);
+		super(team, WHITE_ICON, BLACK_ICON);
 	}
 
 	@Override

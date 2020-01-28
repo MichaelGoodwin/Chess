@@ -25,8 +25,10 @@
 package com.github.michaelgoodwin.chess.pieces;
 
 import com.github.michaelgoodwin.chess.GameBoard;
+import com.github.michaelgoodwin.chess.ImageUtil;
 import com.github.michaelgoodwin.chess.Team;
 import java.awt.Point;
+import java.awt.image.BufferedImage;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -35,9 +37,12 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class Knight extends Piece
 {
+	private static final BufferedImage WHITE_ICON = ImageUtil.getResourceStreamFromClass(Piece.class, "wn.png");
+	private static final BufferedImage BLACK_ICON = ImageUtil.getResourceStreamFromClass(Piece.class, "bn.png");
+
 	public Knight(Team team)
 	{
-		super(team);
+		super(team, WHITE_ICON, BLACK_ICON);
 	}
 
 	@Override

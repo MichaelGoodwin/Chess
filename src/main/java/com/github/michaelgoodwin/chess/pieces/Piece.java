@@ -27,17 +27,18 @@ package com.github.michaelgoodwin.chess.pieces;
 import com.github.michaelgoodwin.chess.GameBoard;
 import com.github.michaelgoodwin.chess.Team;
 import java.awt.Point;
+import java.awt.image.BufferedImage;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
 @Data
-@RequiredArgsConstructor
 public abstract class Piece
 {
 	private final Team team;
 	private Point location;
+	private final BufferedImage whiteIcon;
+	private final BufferedImage blackIcon;
 
 	/**
 	 * Checks if the piece can move to the desired point on the board
@@ -54,6 +55,15 @@ public abstract class Piece
 	 * @return Set of {@link Point}s
 	 */
 	public abstract Set<Point> getPossibleMoves(final Point point, final Piece[][] board);
+
+	/**
+	 * Gets the icon that show be displayed for the piece, accounting for team color.
+	 * @return Piece icon
+	 */
+	public BufferedImage getIcon()
+	{
+		return getTeam().equals(Team.WHITE) ? whiteIcon : blackIcon;
+	}
 
 	/**
 	 * Calculates all possible moves from the specified point on the board by applying the given offsets
