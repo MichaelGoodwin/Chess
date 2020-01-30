@@ -24,8 +24,81 @@
  */
 package com.github.michaelgoodwin.chess.ui;
 
+import com.github.michaelgoodwin.chess.ImageUtil;
+import com.github.michaelgoodwin.chess.pieces.Piece;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.image.BufferedImage;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import lombok.Getter;
 
 public class BoardTile extends JPanel
 {
+	private static final Dimension MINUMUM_SIZE = new Dimension(40, 40);
+
+	@Getter
+	// Used for displaying text in the top-left corner of the grid square (number)
+	private final JLabel topLabel = new JLabel();
+
+	@Getter
+	// Used for displaying text in the bottom-right corner of the grid square (letter)
+	private final JLabel bottomLabel = new JLabel();
+
+	private Piece piece;
+	private BufferedImage resizedIcon;
+
+	public BoardTile()
+	{
+		setLayout(new GridLayout(2, 1, 0, 0));
+		setLayout(new GridBagLayout());
+		setPreferredSize(MINUMUM_SIZE);
+
+		final GridBagConstraints c = new GridBagConstraints();
+		c.gridx = 0;
+		c.gridy = 0;
+		c.weightx = 1;
+		c.weighty = 1;
+		c.fill = GridBagConstraints.BOTH;
+
+		topLabel.setVerticalAlignment(JLabel.TOP);
+		topLabel.setHorizontalAlignment(JLabel.LEFT);
+		topLabel.setBorder(new EmptyBorder(1, 0, 0, 0));
+		add(topLabel, c);
+		c.gridy++;
+
+		bottomLabel.setVerticalAlignment(JLabel.BOTTOM);
+		bottomLabel.setHorizontalAlignment(JLabel.RIGHT);
+		bottomLabel.setBorder(new EmptyBorder(0, 0, 0, 1));
+		add(bottomLabel, c);
+	}
+
+	public void setPiece(final Piece p)
+	{
+		piece = p;
+		resizedIcon = null;
+	}
+
+	@Override
+	public void paintComponent(Graphics g)
+	{
+		super.paintComponent(g);
+
+		if (piece == null)
+		{
+			return;
+		}
+
+		final Graphics2D g2d = (Graphics2D) g;
+		if (resizedIcon == null || (getWidth() != resizedIcon.getWidth() || getHeight() != resizedIcon.getHeight()))
+		{
+			resizedIcon = ImageUtil.resizeImage(piece.getIcon(), getWidth(), getHeight());
+		}
+		g2d.drawImage(resizedIcon, 0, 0, null);
+	}
 }

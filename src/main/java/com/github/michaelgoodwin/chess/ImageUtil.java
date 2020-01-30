@@ -24,6 +24,8 @@
  */
 package com.github.michaelgoodwin.chess;
 
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
@@ -61,5 +63,29 @@ public class ImageUtil
 		{
 			throw new RuntimeException(path, e);
 		}
+	}
+
+	/**
+	 * Re-size a BufferedImage to the given dimensions.
+	 *
+	 * @param image the BufferedImage.
+	 * @param newWidth The width to set the BufferedImage to.
+	 * @param newHeight The height to set the BufferedImage to.
+	 * @return The BufferedImage with the specified dimensions
+	 */
+	public static BufferedImage resizeImage(final BufferedImage image, final int newWidth, final int newHeight)
+	{
+		final Image resized = image.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
+		if (resized instanceof BufferedImage && ((BufferedImage) resized).getType() == BufferedImage.TYPE_INT_ARGB)
+		{
+			return (BufferedImage) resized;
+		}
+
+		// Convert from Image to BufferedImage
+		BufferedImage out = new BufferedImage(resized.getWidth(null), resized.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g2d = out.createGraphics();
+		g2d.drawImage(resized, 0, 0, null);
+		g2d.dispose();
+		return out;
 	}
 }

@@ -24,6 +24,9 @@
  */
 package com.github.michaelgoodwin.chess.ui;
 
+import com.github.michaelgoodwin.chess.GameBoard;
+import com.github.michaelgoodwin.chess.Move;
+import com.github.michaelgoodwin.chess.pieces.Piece;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -35,29 +38,44 @@ public class ChessBoard extends JPanel
 	private static final Color DARK_TILE = new Color(240, 217, 181);
 	private static final Dimension MINIMUM_BOARD_SIZE = new Dimension(300, 300);
 
-	public ChessBoard()
+	public ChessBoard(final GameBoard gameBoard)
 	{
 		super();
 
 		setLayout(new GridLayout(8, 8));
-		boolean darkFlag = false;
-		for (int i = 0; i < 64; i++)
+
+		final Piece[][] board = gameBoard.getBoard();
+		boolean darkFlag = true;
+		// Due to the way Java will layout these items we need to start with the last row first
+		for (int j = GameBoard.SIZE - 1; j >= 0; j--)
 		{
-			// We need to repeat the last color on the next rows first tile to get a checkered pattern
-			if (i % 8 == 0)
+			for (int i = 0; i < GameBoard.SIZE; i++)
 			{
+				final BoardTile tile = new BoardTile();
+				tile.setBackground(darkFlag ? DARK_TILE : LIGHT_TILE);
+				tile.setPiece(board[i][j]);
+
+				// Add Row numbers to first column
+				if (i == 0)
+				{
+					tile.getTopLabel().setText(String.valueOf(j + 1));
+				}
+
+				// Add column letters to bottom row
+				if (j == 0)
+				{
+					tile.getBottomLabel().setText(Move.getColumnLetter(i).toLowerCase());
+				}
+
+				add(tile);
 				darkFlag = !darkFlag;
 			}
 
-			final BoardTile tile = new BoardTile();
-			tile.setBackground(darkFlag ? DARK_TILE : LIGHT_TILE);
-			add(tile);
-
+			// We need to repeat the last color on the next row to get a checkered pattern
 			darkFlag = !darkFlag;
 		}
 
 		setMinimumSize(MINIMUM_BOARD_SIZE);
-		setPreferredSize(MINIMUM_BOARD_SIZE);
 
 		revalidate();
 		repaint();
