@@ -43,7 +43,7 @@ public class Game
 	private final GameBoard board = new GameBoard();
 	private final List<Move> moves = new ArrayList<>();
 
-	void newGame()
+	public void newGame()
 	{
 		whitePlayer.getCapturedPieces().clear();
 		whitePlayer.setTimeRemaining(startingTime);
@@ -56,7 +56,7 @@ public class Game
 		board.setActivePlayer(whitePlayer);
 	}
 
-	void playMove(Move move)
+	public void playMove(Move move)
 	{
 		moves.add(move);
 		board.playMove(move);

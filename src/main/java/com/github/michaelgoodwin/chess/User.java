@@ -30,8 +30,8 @@ import lombok.Data;
  * A chess users profile
  */
 @Data
-class User
+public class User
 {
 	private final String username;
-	private int elo;
+	private int elo = 1200;
 }

@@ -48,7 +48,7 @@ public class Move
 	private final Piece capturedPiece;
 	private final Piece[][] board; // Need a snapshot of the board to calculate notation
 
-	private static String getColumnLetter(final int colIndex)
+	public static String getColumnLetter(final int colIndex)
 	{
 		return String.valueOf((char) ('A' + colIndex));
 	}
