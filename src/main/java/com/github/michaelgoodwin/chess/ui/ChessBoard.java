@@ -28,8 +28,12 @@ import com.github.michaelgoodwin.chess.GameBoard;
 import com.github.michaelgoodwin.chess.Move;
 import com.github.michaelgoodwin.chess.pieces.Piece;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.JPanel;
 
 public class ChessBoard extends JPanel
@@ -38,7 +42,9 @@ public class ChessBoard extends JPanel
 	private static final Color DARK_TILE = new Color(240, 217, 181);
 	private static final Dimension MINIMUM_BOARD_SIZE = new Dimension(300, 300);
 
-	public ChessBoard(final GameBoard gameBoard)
+	private Point selectedPoint = null;
+
+	public ChessBoard(final ChessGame game, final GameBoard gameBoard)
 	{
 		super();
 
@@ -69,6 +75,32 @@ public class ChessBoard extends JPanel
 
 				add(tile);
 				darkFlag = !darkFlag;
+				final Point tileCoord = new Point(i, j);
+				tile.addMouseListener(new MouseAdapter()
+				{
+					@Override
+					public void mousePressed(MouseEvent e)
+					{
+						super.mousePressed(e);
+						if (selectedPoint == null)
+						{
+							final Piece p = board[tileCoord.x][tileCoord.y];
+							if (p != null)
+							{
+								selectedPoint = tileCoord;
+							}
+						}
+						else
+						{
+							//TODO: Show failure visually
+							game.playMove(new Move(selectedPoint, tileCoord, gameBoard));
+							selectedPoint = null;
+							update(gameBoard);
+							revalidate();
+							repaint();
+						}
+					}
+				});
 			}
 
 			// We need to repeat the last color on the next row to get a checkered pattern
@@ -76,6 +108,28 @@ public class ChessBoard extends JPanel
 		}
 
 		setMinimumSize(MINIMUM_BOARD_SIZE);
+
+		revalidate();
+		repaint();
+	}
+
+	void update(GameBoard gameBoard)
+	{
+		int count = 0;
+		final Piece[][] board = gameBoard.getBoard();
+		for (int j = GameBoard.SIZE - 1; j >= 0; j--)
+		{
+			for (int i = 0; i < GameBoard.SIZE; i++)
+			{
+				Component c = getComponent(count);
+				if (c instanceof BoardTile)
+				{
+					BoardTile tile = ((BoardTile) c);
+					tile.setPiece(board[i][j]);
+				}
+				count++;
+			}
+		}
 
 		revalidate();
 		repaint();

@@ -46,7 +46,19 @@ public class Move
 	private final Point startingPoint;
 	private final Point endingPoint;
 	private final Piece capturedPiece;
-	private final Piece[][] board; // Need a snapshot of the board to calculate notation
+	private final GameBoard gameBoard; // Need a snapshot of the board to calculate notation
+
+	public Move(final Point startingPoint, final Point endingPoint, final GameBoard gameBoard)
+	{
+		this.startingPoint = startingPoint;
+		this.endingPoint = endingPoint;
+
+		this.gameBoard = gameBoard;
+		this.player = gameBoard.getActivePlayer();
+
+		this.movedPiece = gameBoard.getBoard()[startingPoint.x][startingPoint.y];
+		this.capturedPiece = gameBoard.getBoard()[endingPoint.x][endingPoint.y];
+	}
 
 	public static String getColumnLetter(final int colIndex)
 	{
@@ -69,6 +81,7 @@ public class Move
 		final int rowDiff = startingPoint.y - endingPoint.y;
 		final int colDiff = startingPoint.x - endingPoint.x;
 
+		final Piece[][] board = gameBoard.getBoard();
 		// Rooks can only ever attack on the same column or the same row so case 3 will never effect them
 		if (movedPiece instanceof Rook)
 		{
@@ -89,7 +102,7 @@ public class Move
 						continue;
 					}
 
-					if (p.canMoveToPoint(endingPoint, board))
+					if (p.canMoveToPoint(endingPoint, gameBoard))
 					{
 						notation += String.valueOf(startingPoint.y);
 						break;

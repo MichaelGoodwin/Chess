@@ -25,6 +25,7 @@
 package com.github.michaelgoodwin.chess.ui;
 
 import com.github.michaelgoodwin.chess.Game;
+import com.github.michaelgoodwin.chess.Move;
 import com.github.michaelgoodwin.chess.Player;
 import com.github.michaelgoodwin.chess.Team;
 import com.github.michaelgoodwin.chess.User;
@@ -36,6 +37,8 @@ import javax.swing.JPanel;
 
 public class ChessGame extends JPanel
 {
+	private Game game;
+
 	public ChessGame()
 	{
 		super();
@@ -51,13 +54,13 @@ public class ChessGame extends JPanel
 
 		final Player white = new Player(new User("Michael Goodwin"), Team.WHITE);
 		final Player black = new Player(new User("Michael Goodwin"), Team.BLACK);
-		final Game g = new Game(null, null, Duration.ofSeconds(120), Duration.ZERO);
-		g.newGame();
+		game = new Game(white, black, Duration.ofSeconds(120), Duration.ZERO);
+		game.newGame();
 
 		add(new PlayerBanner(), c);
 		c.gridy++;
 		c.weighty = 1;
-		add(new ChessBoard(g.getBoard()), c);
+		add(new ChessBoard(this, game.getBoard()), c);
 		c.gridy++;
 		c.weighty = 0;
 		add(new PlayerBanner(), c);
@@ -68,5 +71,10 @@ public class ChessGame extends JPanel
 		c.gridx++;
 		c.weightx = 0;
 		add(new JLabel("Moves and other stuff goes over here btw"), c);
+	}
+
+	void playMove(Move m)
+	{
+		game.playMove(m);
 	}
 }

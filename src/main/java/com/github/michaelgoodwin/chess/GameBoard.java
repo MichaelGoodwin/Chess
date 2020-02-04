@@ -124,10 +124,18 @@ public class GameBoard
 		board[7][backRow] = hRook;
 	}
 
-	void playMove(Move move)
+	public void playMove(Move move)
 	{
-		Point start = move.getMovedPiece().getLocation();
-		Point end = move.getMovedPiece().getLocation();
+		// TODO: Add checks and stuff
+		final Point start = move.getStartingPoint();
+		final Point end = move.getEndingPoint();
+
+		move.getMovedPiece().setLocation(end);
+		if (move.getCapturedPiece() != null)
+		{
+			move.getCapturedPiece().setLocation(new Point(-1, -1));
+		}
+
 		board[start.x][start.y] = null;
 		board[end.x][end.y] = move.getMovedPiece();
 
