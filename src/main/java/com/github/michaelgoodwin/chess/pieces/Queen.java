@@ -56,7 +56,7 @@ public class Queen extends Piece
 		final int yDiff = getLocation().y - point.y;
 
 		final boolean oneDirection = yDiff == 0 || xDiff == 0;
-		final boolean diagonalMovement = yDiff == xDiff;
+		final boolean diagonalMovement = Math.abs(yDiff) == Math.abs(xDiff);
 
 		if (!oneDirection && !diagonalMovement)
 		{
