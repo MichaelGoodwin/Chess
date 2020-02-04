@@ -24,6 +24,7 @@
  */
 package com.github.michaelgoodwin.chess.pieces;
 
+import com.github.michaelgoodwin.chess.GameBoard;
 import com.github.michaelgoodwin.chess.ImageUtil;
 import com.github.michaelgoodwin.chess.Team;
 import java.awt.Point;
@@ -43,7 +44,7 @@ public class Queen extends Piece
 	}
 
 	@Override
-	public boolean canMoveToPoint(Point point, Piece[][] board)
+	public boolean canMoveToPoint(Point point, GameBoard gameBoard)
 	{
 		// Must move to a new point
 		if (getLocation().equals(point))
@@ -64,7 +65,7 @@ public class Queen extends Piece
 		}
 
 		// Check if path to target location is clear
-		if (!canReachDestination(point, board))
+		if (!canReachDestination(point, gameBoard))
 		{
 			return false;
 		}
@@ -74,7 +75,7 @@ public class Queen extends Piece
 	}
 
 	@Override
-	public Set<Point> getPossibleMoves(Point point, Piece[][] board)
+	public Set<Point> getPossibleMoves(Point point, GameBoard board)
 	{
 		final int[][] offsets = {
 			{0, 1}, // Up

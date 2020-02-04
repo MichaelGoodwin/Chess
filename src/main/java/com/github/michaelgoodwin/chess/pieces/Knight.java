@@ -46,8 +46,9 @@ public class Knight extends Piece
 	}
 
 	@Override
-	public boolean canMoveToPoint(Point point, Piece[][] board)
+	public boolean canMoveToPoint(Point point, GameBoard gameBoard)
 	{
+		final Piece[][] board = gameBoard.getBoard();
 		// Must move to a new point
 		if (getLocation().equals(point))
 		{
@@ -75,8 +76,9 @@ public class Knight extends Piece
 	}
 
 	@Override
-	public Set<Point> getPossibleMoves(Point point, Piece[][] board)
+	public Set<Point> getPossibleMoves(Point point, GameBoard gameBoard)
 	{
+		final Piece[][] board = gameBoard.getBoard();
 		return Stream.of(
 			// Possible moves left/right (Horizontal L)
 			new Point(point.x + 2, point.y + 1),

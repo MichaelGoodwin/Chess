@@ -64,8 +64,10 @@ public class Pawn extends Piece
 	}
 
 	@Override
-	public boolean canMoveToPoint(Point point, Piece[][] board)
+	public boolean canMoveToPoint(Point point, GameBoard gameBoard)
 	{
+		final Piece[][] board = gameBoard.getBoard();
+
 		int[] forwardOffset;
 		int[][] attackOffsets;
 		switch (getTeam())
@@ -144,8 +146,9 @@ public class Pawn extends Piece
 	}
 
 	@Override
-	public Set<Point> getPossibleMoves(Point point, Piece[][] board)
+	public Set<Point> getPossibleMoves(Point point, GameBoard gameBoard)
 	{
+		final Piece[][] board = gameBoard.getBoard();
 		final Set<Point> points = new HashSet<>();
 
 		int[] forwardOffset;

@@ -48,8 +48,9 @@ public class King extends Piece
 	}
 
 	@Override
-	public boolean canMoveToPoint(Point point, Piece[][] board)
+	public boolean canMoveToPoint(Point point, GameBoard gameBoard)
 	{
+		final Piece[][] board = gameBoard.getBoard();
 		// Must move to a new point
 		if (getLocation().equals(point))
 		{
@@ -81,8 +82,9 @@ public class King extends Piece
 
 	// Similar to Piece::getPossibleMovesFromOffset but can only move 1 tile and can't move into check
 	@Override
-	public Set<Point> getPossibleMoves(Point point, Piece[][] board)
+	public Set<Point> getPossibleMoves(Point point, GameBoard gameBoard)
 	{
+		final Piece[][] board = gameBoard.getBoard();
 		final int[][] offsets = {
 			{0, 1}, // Up
 			{0, -1}, // Down

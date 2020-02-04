@@ -43,18 +43,18 @@ public abstract class Piece
 	/**
 	 * Checks if the piece can move to the desired point on the board
 	 * @param point target location
-	 * @param board current game board
+	 * @param gameBoard current game board
 	 * @return can it move there
 	 */
-	public abstract boolean canMoveToPoint(final Point point, final Piece[][] board);
+	public abstract boolean canMoveToPoint(final Point point, final GameBoard gameBoard);
 
 	/**
 	 * Calculates all possible moves from the specified point on the board
 	 * @param point current location
-	 * @param board current game board
+	 * @param gameBoard current game board
 	 * @return Set of {@link Point}s
 	 */
-	public abstract Set<Point> getPossibleMoves(final Point point, final Piece[][] board);
+	public abstract Set<Point> getPossibleMoves(final Point point, final GameBoard gameBoard);
 
 	/**
 	 * Gets the icon that show be displayed for the piece, accounting for team color.
@@ -69,12 +69,14 @@ public abstract class Piece
 	 * Calculates all possible moves from the specified point on the board by applying the given offsets
 	 * Continues applying the offset until it reaches the edge of the board, an occupied friendly tile, or would capture an enemy unit
 	 * @param point current location
-	 * @param board current game board
+	 * @param gameBoard current game board
 	 * @param offsets the offsets to be applied
 	 * @return Set of {@link Point}s
 	 */
-	public Set<Point> getPossibleMovesFromOffsets(final Point point, final Piece[][] board, final int[][] offsets)
+	public Set<Point> getPossibleMovesFromOffsets(final Point point, final GameBoard gameBoard, final int[][] offsets)
 	{
+		final Piece[][] board = gameBoard.getBoard();
+
 		final Set<Point> points = new HashSet<>();
 
 		for (int[] o : offsets)
@@ -106,7 +108,6 @@ public abstract class Piece
 			}
 		}
 
-		// TODO: Account for being pinned
 		return points;
 	}
 
@@ -114,11 +115,13 @@ public abstract class Piece
 	 * Checks if the piece can reach the target point, target point should be in a straight line
 	 * Will return false if there are pieces between or on your target point.
 	 * @param point
-	 * @param board
+	 * @param gameBoard
 	 * @return
 	 */
-	public boolean canReachDestination(final Point point, final Piece[][] board)
+	public boolean canReachDestination(final Point point, final GameBoard gameBoard)
 	{
+		final Piece[][] board = gameBoard.getBoard();
+
 		final int xDiff = getLocation().x - point.x;
 		final int yDiff = getLocation().y - point.y;
 
