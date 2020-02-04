@@ -113,10 +113,10 @@ public abstract class Piece
 
 	/**
 	 * Checks if the piece can reach the target point, target point should be in a straight line
-	 * Will return false if there are pieces between or on your target point.
-	 * @param point
-	 * @param gameBoard
-	 * @return
+	 * Does not check if the piece is pinned
+	 * @param point destination tile
+	 * @param gameBoard current game board
+	 * @return false if pieces between or on your target point
 	 */
 	public boolean canReachDestination(final Point point, final GameBoard gameBoard)
 	{
@@ -143,14 +143,15 @@ public abstract class Piece
 			if (p.equals(point))
 			{
 				p = null;
-				continue;
+				return true;
 			}
 
 			p = new Point(p.x + offset[0], p.y + offset[1]);
 			if (p.x > GameBoard.SIZE || p.y > GameBoard.SIZE)
 			{
 				// Out of bounds
-				return false;
+				p = null;
+				continue;
 			}
 
 			final Piece piece = board[p.x][p.y];
@@ -165,9 +166,7 @@ public abstract class Piece
 			}
 		}
 
-
-		//TODO: Check for pinned
-		return true;
+		return false;
 	}
 
 	/**
