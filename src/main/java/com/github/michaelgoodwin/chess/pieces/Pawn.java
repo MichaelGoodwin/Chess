@@ -84,11 +84,28 @@ public class Pawn extends Piece
 				return false;
 		}
 
-		final int offset[] = {getLocation().x - point.x, getLocation().y - point.y};
+		final int[] offset = {getLocation().x - point.x, getLocation().y - point.y};
 
 		// A pawn can only move towards the enemies side of the board on the Y axis unless it is capturing another piece.
 		// If it is capturing another piece it must move diagonally (D5->C6/E6 for white or D5->C4/E4 for black)
 		// If a pawn hasn't moved yet it can move 2 tiles granted the tiles are open
+
+		// If they moved more than 1 tile left/right or 2 tiles up/down its an impossible move.
+		if (Math.abs(offset[0]) > 1 || Math.abs(offset[1]) > 2)
+		{
+			return false;
+		}
+
+		// If pinned we need to check we are capturing in the pin direction, if we aren't then the move is illegal
+		if (isPinned(gameBoard))
+		{
+			final Point kingPosition = gameBoard.getKingPositions().get(getTeam()).getLocation();
+			final int[] kingToMeOffset = getMovementOffset(kingPosition, getLocation());
+			if (Arrays.compare(offset, kingToMeOffset) != 0)
+			{
+				return false;
+			}
+		}
 
 		// Attempting to move forward two squares
 		final boolean jumpForward = offset[0] == forwardOffset[0] && offset[1] == (forwardOffset[1] * 2);
@@ -140,8 +157,6 @@ public class Pawn extends Piece
 			}
 		}
 
-
-		// TODO: Check for pinned
 		return true;
 	}
 
@@ -167,9 +182,10 @@ public class Pawn extends Piece
 				return points;
 		}
 
+		final boolean pinned = isPinned(gameBoard);
 
 		final Point forward = new Point(point.x + forwardOffset[0], + point.y + forwardOffset[1]);
-		if (forward.x < GameBoard.SIZE && forward.y < GameBoard.SIZE)
+		if (!pinned && forward.x < GameBoard.SIZE && forward.y < GameBoard.SIZE)
 		{
 			final Piece forwardPiece = board[forward.x][forward.y];
 			if (forwardPiece == null)
@@ -186,7 +202,8 @@ public class Pawn extends Piece
 				final Piece attackedPiece = board[attackPoint.x][attackPoint.y];
 				if (attackedPiece == null)
 				{
-					if (!canPassant)
+					// Pinned pieces cant passant
+					if (!canPassant || pinned)
 					{
 						continue;
 					}
@@ -202,12 +219,22 @@ public class Pawn extends Piece
 				}
 				else if (!attackedPiece.getTeam().equals(getTeam()))
 				{
+					// If pinned we need to check we are capturing in the pin direction, if we aren't then the move is illegal
+					if (pinned)
+					{
+						final Point kingPosition = gameBoard.getKingPositions().get(getTeam());
+						final int[] kingToMeOffset = getMovementOffset(kingPosition, getLocation());
+						if (Arrays.compare(o, kingToMeOffset) != 0)
+						{
+							continue;
+						}
+					}
+
 					points.add(attackPoint);
 				}
 			}
 		}
 
-		// TODO: Check if piece is pinned
 		return points;
 	}
 }

@@ -29,6 +29,7 @@ import com.github.michaelgoodwin.chess.ImageUtil;
 import com.github.michaelgoodwin.chess.Team;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -71,13 +72,23 @@ public class Knight extends Piece
 			return false;
 		}
 
-		// TODO: Check if king would be in check after moving (pinned piece)
+		// Pinned knights can't attack the piece that is pinning them
+		if (isPinned(gameBoard))
+		{
+			return false;
+		}
+
 		return true;
 	}
 
 	@Override
 	public Set<Point> getPossibleMoves(Point point, GameBoard gameBoard)
 	{
+		if (isPinned(gameBoard))
+		{
+			return new HashSet<>();
+		}
+
 		final Piece[][] board = gameBoard.getBoard();
 		return Stream.of(
 			// Possible moves left/right (Horizontal L)
@@ -102,7 +113,6 @@ public class Knight extends Piece
 					return piece == null || !piece.getTeam().equals(getTeam());
 				})
 			.collect(Collectors.toSet());
-		// TODO: Check if the king would be in check after moving (Pinned piece)
 	}
 
 	@Override

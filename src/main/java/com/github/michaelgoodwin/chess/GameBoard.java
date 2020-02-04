@@ -32,6 +32,8 @@ import com.github.michaelgoodwin.chess.pieces.Piece;
 import com.github.michaelgoodwin.chess.pieces.Queen;
 import com.github.michaelgoodwin.chess.pieces.Rook;
 import java.awt.Point;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -50,6 +52,9 @@ public class GameBoard
 	public Move lastMove;
 	@Setter
 	public Player activePlayer;
+
+	// Needed for checking for pins
+	private Map<Team, Point> kingPositions = new HashMap<>();
 
 	public void newGame()
 	{
@@ -104,6 +109,7 @@ public class GameBoard
 		final Piece king = new King(team);
 		king.setLocation(new Point(4, backRow));
 		board[4][backRow] = king;
+		kingPositions.put(team, king.getLocation());
 
 		final Piece fBishop = new Bishop(team);
 		fBishop.setLocation(new Point(5, backRow));

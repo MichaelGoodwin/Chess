@@ -29,6 +29,7 @@ import com.github.michaelgoodwin.chess.ImageUtil;
 import com.github.michaelgoodwin.chess.Team;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
 import java.util.Set;
 import lombok.EqualsAndHashCode;
 
@@ -46,7 +47,6 @@ public class Bishop extends Piece
 	@Override
 	public boolean canMoveToPoint(Point point, GameBoard gameBoard)
 	{
-		final Piece[][] board = gameBoard.getBoard();
 		// Must move to a new point
 		if (getLocation().equals(point))
 		{
@@ -63,13 +63,21 @@ public class Bishop extends Piece
 			return false;
 		}
 
+		if (isPinned(gameBoard))
+		{
+			// Pinned pieces can only move in the direction of the pin
+			if (Arrays.compare(getMovementOffset(getLocation(), point), getKingPinOffset(gameBoard)) != 0)
+			{
+				return false;
+			}
+		}
+
 		// Check if path to target location is clear
 		if (!canReachDestination(point, gameBoard))
 		{
 			return false;
 		}
 
-		//TODO: Check for pinned
 		return true;
 	}
 
