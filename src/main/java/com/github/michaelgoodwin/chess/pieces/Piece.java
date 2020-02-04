@@ -122,24 +122,16 @@ public abstract class Piece
 		final int xDiff = getLocation().x - point.x;
 		final int yDiff = getLocation().y - point.y;
 
-		int[] offset;
-		// Moving diagonally?
-		if (Math.abs(xDiff) == Math.abs(yDiff))
+		final boolean oneDirection = yDiff == 0 || xDiff == 0;
+		final boolean diagonalMovement = Math.abs(yDiff) == Math.abs(xDiff);
+
+		// Pieces that aren't in a straight line, like the knight, should override this method
+		if (!oneDirection && !diagonalMovement)
 		{
-			offset = new int[]{xDiff > 0 ? 1 : -1, yDiff > 0 ? 1 : -1};
+			return false;
 		}
-		else
-		{
-			offset = new int[]{0, 0};
-			if (xDiff != 0)
-			{
-				offset[0] = xDiff > 0 ? 1 : -1;
-			}
-			else
-			{
-				offset[1] = yDiff > 0 ? 1 : -1;
-			}
-		}
+
+		final int[] offset = getMovementOffset(point);
 
 		Point p = getLocation();
 		while (p != null)
@@ -182,5 +174,18 @@ public abstract class Piece
 	public String getChessNotationPrefix()
 	{
 		return "";
+	}
+
+	/**
+	 * Returns the offset required to get to the target position iteratively
+	 * @param target destination tile
+	 * @return {xOffset,yOffset}
+	 */
+	public int[] getMovementOffset(final Point target)
+	{
+		final int xDiff = getLocation().x - target.x;
+		final int yDiff = getLocation().y - target.y;
+
+		return new int[] {Integer.compare(xDiff, 0), Integer.compare(yDiff, 0)};
 	}
 }
