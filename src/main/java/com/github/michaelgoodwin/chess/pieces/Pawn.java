@@ -84,7 +84,7 @@ public class Pawn extends Piece
 				return false;
 		}
 
-		final int[] offset = {getLocation().x - point.x, getLocation().y - point.y};
+		final int[] offset = {point.x - getLocation().x, point.y - getLocation().y};
 
 		// A pawn can only move towards the enemies side of the board on the Y axis unless it is capturing another piece.
 		// If it is capturing another piece it must move diagonally (D5->C6/E6 for white or D5->C4/E4 for black)
@@ -96,22 +96,20 @@ public class Pawn extends Piece
 			return false;
 		}
 
-		// If pinned we need to check we are capturing in the pin direction, if we aren't then the move is illegal
-		if (isPinned(gameBoard))
+		final boolean isAttacking = Arrays.equals(offset, attackOffsets[0]) || Arrays.equals(offset, attackOffsets[1]);
+		final boolean isMovingForward = Arrays.equals(offset, forwardOffset);
+		final boolean isJumpingForward = Math.abs(offset[1]) == 2;
+
+		// Must be one of these movement methods
+		if (!isAttacking && !isMovingForward && !isJumpingForward)
 		{
-			final Point kingPosition = gameBoard.getKingPositions().get(getTeam()).getLocation();
-			final int[] kingToMeOffset = getMovementOffset(kingPosition, getLocation());
-			if (Arrays.compare(offset, kingToMeOffset) != 0)
-			{
-				return false;
-			}
+			return false;
 		}
 
-		// Attempting to move forward two squares
-		final boolean jumpForward = offset[0] == forwardOffset[0] && offset[1] == (forwardOffset[1] * 2);
-		if (jumpForward)
+		if (isJumpingForward)
 		{
-			if (hasMoved)
+			// Can only move two squares on first move
+			if (hasMoved || offset[0] != 0)
 			{
 				return false;
 			}
@@ -127,31 +125,45 @@ public class Pawn extends Piece
 		}
 
 		Piece targetPiece = board[point.x][point.y];
-		if (targetPiece != null && targetPiece.getTeam().equals(getTeam()))
+		if (targetPiece == null)
 		{
-			// Tile is occupied by an entity that can't be captured
-			return false;
-		}
-
-		// Attempting to capture a piece
-		if (Arrays.equals(offset, attackOffsets[0]) || Arrays.equals(offset, attackOffsets[1]))
-		{
-			// A pawn can "en passant capture" an enemy pawn that has moved two tiles on it's last turn.
-			// For Example: White's pawn on d5 can capture the black pawn on c5 if the last move was c7->c5 (blacks pawn)
-			// To capture the black pawn on c6 white will move to c6 from d5
-			if (targetPiece == null)
+			if (isAttacking)
 			{
-				if (!canPassant)
+				if (canPassant)
+				{
+					// Check for target behind target tile
+					final Point passantTarget = new Point(point.x, point.y - forwardOffset[1]);
+					targetPiece = board[passantTarget.x][passantTarget.y];
+					// can only en-passant capture pawns, instanceof will return false for nulls as well
+					if (!(targetPiece instanceof Pawn))
+					{
+						return false;
+					}
+				}
+				else
 				{
 					return false;
 				}
-
-				// Check for target behind target tile
-				final Point passantTarget = new Point(point.x, point.y - forwardOffset[1]);
-				targetPiece = board[passantTarget.x][passantTarget.y];
 			}
+		}
 
-			if (!(targetPiece instanceof Pawn) || targetPiece.getTeam().equals(getTeam()))
+		// Don't else statement as the targetPiece can change if passant capturing
+		if (targetPiece != null)
+		{
+			// Pawns can't have a target if moving forward, and it must be an enemy if they are attacking
+			if (!isAttacking || targetPiece.getTeam().equals(getTeam()))
+			{
+				return false;
+			}
+		}
+
+		// If pinned we need to check we are moving in the pin direction, if we aren't then the move is illegal
+		if (isPinned(gameBoard))
+		{
+			final Point kingPosition = gameBoard.getKingPositions().get(getTeam()).getLocation();
+			final int[] kingToMeOffset = getMovementOffset(kingPosition, getLocation());
+			// Not moving in the same direction as the pin
+			if (Arrays.compare(offset, kingToMeOffset) != 0)
 			{
 				return false;
 			}
