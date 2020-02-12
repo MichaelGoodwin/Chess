@@ -58,8 +58,8 @@ public class King extends Piece
 		}
 
 		// A king can move one tile in any direction
-		final int xDiff = Math.abs(getLocation().x - point.x);
-		final int yDiff = Math.abs(getLocation().y - point.y);
+		final int xDiff = Math.abs(point.x - getLocation().x);
+		final int yDiff = Math.abs(point.y - getLocation().y);
 
 		// Moved more than possible
 		if (xDiff > 1 || yDiff > 1)
@@ -101,7 +101,7 @@ public class King extends Piece
 		for (int[] o : offsets)
 		{
 			final Point p = new Point(point.x + o[0], point.y + o[1]);
-			if (p.x > GameBoard.SIZE || p.y > GameBoard.SIZE)
+			if (!isPointValid(p))
 			{
 				// Out of bounds
 				continue;

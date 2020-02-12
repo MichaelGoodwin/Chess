@@ -54,8 +54,8 @@ public class Bishop extends Piece
 		}
 
 		// A bishop can only move diagonally
-		int xDiff = getLocation().x - point.x;
-		int yDiff = getLocation().y - point.y;
+		int xDiff = point.x - getLocation().x;
+		int yDiff = point.y - getLocation().y;
 
 		// Not moving diagonally
 		if (Math.abs(xDiff) != Math.abs(yDiff))

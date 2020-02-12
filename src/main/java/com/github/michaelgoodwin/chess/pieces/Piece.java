@@ -130,8 +130,8 @@ public abstract class Piece
 	{
 		final Piece[][] board = gameBoard.getBoard();
 
-		final int xDiff = getLocation().x - point.x;
-		final int yDiff = getLocation().y - point.y;
+		final int xDiff = point.x - getLocation().x;
+		final int yDiff = point.y - getLocation().y;
 
 		final boolean oneDirection = yDiff == 0 || xDiff == 0;
 		final boolean diagonalMovement = Math.abs(yDiff) == Math.abs(xDiff);
@@ -147,14 +147,15 @@ public abstract class Piece
 		Point p = getLocation();
 		while (p != null)
 		{
-			// Reached the target location
 			if (p.equals(point))
 			{
-				return true;
+				// Reached the target location
+				p = null;
+				continue;
 			}
 
 			p = new Point(p.x + offset[0], p.y + offset[1]);
-			if (p.x > GameBoard.SIZE || p.y > GameBoard.SIZE)
+			if (!isPointValid(p))
 			{
 				// Out of bounds
 				p = null;
@@ -173,7 +174,7 @@ public abstract class Piece
 			}
 		}
 
-		return false;
+		return true;
 	}
 
 	public boolean isPinned(final GameBoard gameBoard)
@@ -200,7 +201,7 @@ public abstract class Piece
 		while (p != null)
 		{
 			p = new Point(p.x + offset[0], p.y + offset[1]);
-			if (p.x > GameBoard.SIZE || p.y > GameBoard.SIZE)
+			if (!isPointValid(p))
 			{
 				// Out of bounds
 				p = null;
@@ -263,8 +264,8 @@ public abstract class Piece
 	 */
 	public int[] getMovementOffset(final Point start, final Point target)
 	{
-		final int xDiff = start.x - target.x;
-		final int yDiff = start.y - target.y;
+		final int xDiff = target.x - start.x;
+		final int yDiff = target.y - start.y;
 
 		return new int[] {Integer.compare(xDiff, 0), Integer.compare(yDiff, 0)};
 	}
@@ -279,5 +280,10 @@ public abstract class Piece
 	{
 		final Point kingLocation = board.getKingPositions().get(getTeam()).getLocation();
 		return getMovementOffset(kingLocation, getLocation());
+	}
+
+	public static boolean isPointValid(final Point point)
+	{
+		return point.x >= 0 && point.x < GameBoard.SIZE && point.y >= 0 && point.y < GameBoard.SIZE;
 	}
 }

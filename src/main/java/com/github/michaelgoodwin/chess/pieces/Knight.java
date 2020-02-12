@@ -57,8 +57,8 @@ public class Knight extends Piece
 		}
 
 		// A knight moves in an L shape, which means 2 in either X/Y and 1 in either X/Y;
-		final int xDiff = Math.abs(getLocation().x - point.x);
-		final int yDiff = Math.abs(getLocation().y - point.y);
+		final int xDiff = Math.abs(point.x - getLocation().x);
+		final int yDiff = Math.abs(point.y - getLocation().y);
 
 		final boolean validShape = (xDiff == 2 && yDiff == 1) || (xDiff == 1 && yDiff == 2);
 		if (!validShape)

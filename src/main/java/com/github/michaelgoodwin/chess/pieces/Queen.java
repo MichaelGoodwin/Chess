@@ -54,8 +54,8 @@ public class Queen extends Piece
 		}
 
 		// A queen can move an unlimited number of tiles diagonally(bishop) or in one direction(Rook)
-		final int xDiff = getLocation().x - point.x;
-		final int yDiff = getLocation().y - point.y;
+		final int xDiff = point.x - getLocation().x;
+		final int yDiff = point.y - getLocation().y;
 
 		final boolean oneDirection = yDiff == 0 || xDiff == 0;
 		final boolean diagonalMovement = Math.abs(yDiff) == Math.abs(xDiff);

@@ -32,12 +32,16 @@ import java.awt.image.BufferedImage;
 import java.util.Arrays;
 import java.util.Set;
 import lombok.EqualsAndHashCode;
+import lombok.Setter;
 
 @EqualsAndHashCode(callSuper = true)
 public class Rook extends Piece
 {
 	private static final BufferedImage WHITE_ICON = ImageUtil.getResourceStreamFromClass(Piece.class, "wr.png");
 	private static final BufferedImage BLACK_ICON = ImageUtil.getResourceStreamFromClass(Piece.class, "br.png");
+
+	@Setter
+	private boolean hasMoved = false;
 
 	public Rook(Team team)
 	{
@@ -54,8 +58,8 @@ public class Rook extends Piece
 		}
 
 		// A Rook can move an unlimited number of tiles on one axis only
-		final int xDiff = getLocation().x - point.x;
-		final int yDiff = getLocation().y - point.y;
+		final int xDiff = point.x - getLocation().x;
+		final int yDiff = point.y - getLocation().y;
 
 		final boolean oneDirection = yDiff == 0 || xDiff == 0;
 		if (!oneDirection)
