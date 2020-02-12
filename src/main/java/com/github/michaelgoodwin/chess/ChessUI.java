@@ -44,8 +44,8 @@ class ChessUI
 		{
 			frame.setTitle(Chess.GAME_NAME);
 			frame.setIconImage(ICON);
-			frame.setLocationRelativeTo(null); // Center
 			frame.setResizable(true);
+			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 			container.setLayout(new BoxLayout(container, BoxLayout.X_AXIS));
 			container.add(new ChessGame());
@@ -61,6 +61,7 @@ class ChessUI
 			// Layout frame
 			frame.revalidate();
 			frame.pack();
+			frame.setLocationRelativeTo(null); // Center
 			frame.setVisible(true);
 			frame.setMinimumSize(frame.getSize());
 			frame.toFront();
